@@ -2,7 +2,7 @@ import Konva from "konva";
 import { useEffect, useRef } from "react";
 import { Node, NodeConfig } from "konva/lib/Node";
 
-import { Shape } from "../types";
+import { Shape } from "../../types";
 
 export const useTransformer = ({ shapes }: { shapes: Shape[] }) => {
   const layerRef = useRef<Konva.Layer>(null);

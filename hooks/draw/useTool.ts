@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Tool } from "../types";
+import { Tool } from "../../types";
 
 export const useTool = () => {
   const [tool, setTool] = useState<Tool>(Tool.POINTER);

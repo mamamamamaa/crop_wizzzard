@@ -5,14 +5,14 @@ export const getLimitedScale = (currScale: number, min: number, max: number) =>
   Math.max(min, Math.min(max, currScale));
 
 export const useDragging = () => {
-  const [scaleBorders] = useState({ min: 0.1, max: 1 }); // Максимум та мінімум зуму
+  const [scaleBorders] = useState({ min: 0.1, max: 1 });
   const [stagePos, setStagePos] = useState({ x: 0, y: 0 });
   const [stageScale, setStageScale] = useState<number>(1);
 
   const onWheel = useCallback(
     (e: KonvaEventObject<WheelEvent>) => {
       e.evt.preventDefault();
-      const scaleBy = 1.05; // Це множник швидкості зуму
+      const scaleBy = 1.05;
       const stage = e.target.getStage();
       if (!stage) return;
       const oldScale = stage.scaleX();
@@ -25,7 +25,6 @@ export const useDragging = () => {
         y: (pointerPosition.y - stage.y()) / oldScale,
       };
 
-      // Якщо змінити < на >, то зум буде інвертований
       const newScale =
         e.evt.deltaY < 0 ? oldScale * scaleBy : oldScale / scaleBy;
 
