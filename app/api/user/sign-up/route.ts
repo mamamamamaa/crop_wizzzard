@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import * as z from "zod";
-import { signIn } from "next-auth/react";
 
 import prisma from "@/lib/db";
 
@@ -53,12 +52,6 @@ export async function POST(req: Request) {
         username,
         password: hashedPassword,
       },
-    });
-
-    await signIn("credentials", {
-      emailOrUsername: email,
-      password,
-      redirect: false,
     });
 
     return NextResponse.json(

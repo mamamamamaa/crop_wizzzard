@@ -2,6 +2,7 @@ import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn } from "next-auth/react";
 
 const schema = z
   .object({
@@ -57,7 +58,17 @@ export const useSignUpForm = () => {
         return;
       }
 
-      router.replace("/?profile=true");
+      const res = await signIn("credentials", {
+        emailOrUsername: values.email,
+        password: values.password,
+        redirect: false,
+      });
+
+      if (res?.ok) {
+        router.push("/?profile=true");
+      } else if (res?.error) {
+        form.setError("email", { message: res.error });
+      }
     } catch (error) {
       if (error instanceof Error) {
         form.setError("root", { message: error.message });

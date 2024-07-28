@@ -18,7 +18,21 @@ declare module "next-auth" {
   }
 
   interface Session {
-    user: User;
-    token: User;
+    user: User & {
+      id: string;
+      username: string;
+      email: string;
+      avatar: string;
+      createdAt: string;
+      draws: Draw[];
+    };
+    token: {
+      id: string;
+      username: string;
+      email: string;
+      avatar: string;
+      createdAt: string;
+      draws: Draw[];
+    };
   }
 }

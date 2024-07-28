@@ -26,13 +26,17 @@ export const useSignInForm = () => {
 
   const onSubmit = async (values: FormType) => {
     try {
-      await signIn("credentials", {
+      const data = await signIn("credentials", {
         emailOrUsername: values.emailOrUsername,
         password: values.password,
         redirect: false,
       });
 
-      router.replace("/?profile=true");
+      if (data?.ok) {
+        router.push("/?profile=true");
+      } else if (data?.error) {
+        form.setError("password", { message: data.error });
+      }
     } catch (error) {
       if (error instanceof Error) {
         form.setError("emailOrUsername", { message: error.message });

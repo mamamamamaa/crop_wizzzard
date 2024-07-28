@@ -75,25 +75,25 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token }) {
-      if (token) {
-        return {
-          ...token,
-          id: token.id,
-          username: token.username,
-          email: token.email,
-          avatar: token.avatar,
-          createdAt: token.createdAt,
-          draws: token.draws,
-        };
-      }
-
-      return token;
+    async signIn({ user }) {
+      return !!user.username;
     },
-    async session({ session, token, user, trigger, newSession }) {
+    async jwt({ token, user }) {
+      return {
+        ...token,
+        id: user?.id || token?.id,
+        username: user?.username || token?.username,
+        email: user?.email || token?.email,
+        avatar: user?.avatar || token?.avatar,
+        createdAt: user?.createdAt || token?.createdAt,
+        draws: user?.draws || token?.draws,
+      };
+    },
+    async session({ session, token }) {
       return {
         ...session,
         user: {
+          ...session.user,
           id: token.id,
           username: token.username,
           email: token.email,
