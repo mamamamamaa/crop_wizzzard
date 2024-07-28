@@ -34,7 +34,7 @@ export const useSignUpForm = () => {
 
   const onSubmit = async (values: FormType) => {
     try {
-      await fetch("/api/user/sign-up", {
+      const response = await fetch("/api/user/sign-up", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -46,7 +46,18 @@ export const useSignUpForm = () => {
         }),
       });
 
-      router.push("/auth/sign-in");
+      const data = await response.json();
+
+      if (data.user === null) {
+        if (data.message.includes("email")) {
+          form.setError("email", { message: data.message });
+        } else {
+          form.setError("username", { message: data.message });
+        }
+        return;
+      }
+
+      router.replace("/?profile=true");
     } catch (error) {
       if (error instanceof Error) {
         form.setError("root", { message: error.message });

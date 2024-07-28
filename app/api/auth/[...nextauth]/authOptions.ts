@@ -1,8 +1,8 @@
-import { NextAuthOptions } from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import bcrypt from "bcrypt";
+import { NextAuthOptions } from "next-auth";
 
 import prisma from "@/lib/db";
 
@@ -59,14 +59,49 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
+        const draws = await prisma.draw.findMany({
+          where: { authorId: existingUser.id },
+        });
+
         return {
           id: existingUser.id,
           email: existingUser.email,
           username: existingUser.username,
           createdAt: existingUser.createdAt,
           avatar: existingUser.avatar,
+          draws,
         };
       },
     }),
   ],
+  callbacks: {
+    async jwt({ token }) {
+      if (token) {
+        return {
+          ...token,
+          id: token.id,
+          username: token.username,
+          email: token.email,
+          avatar: token.avatar,
+          createdAt: token.createdAt,
+          draws: token.draws,
+        };
+      }
+
+      return token;
+    },
+    async session({ session, token, user, trigger, newSession }) {
+      return {
+        ...session,
+        user: {
+          id: token.id,
+          username: token.username,
+          email: token.email,
+          avatar: token.avatar,
+          createdAt: token.createdAt,
+          draws: token.draws,
+        },
+      };
+    },
+  },
 };

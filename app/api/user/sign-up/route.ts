@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import * as z from "zod";
+import { signIn } from "next-auth/react";
 
 import prisma from "@/lib/db";
 
@@ -46,11 +47,7 @@ export async function POST(req: Request) {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    const {
-      password: _pass,
-      updatedAt,
-      ...userToResponse
-    } = await prisma.user.create({
+    const newUser = await prisma.user.create({
       data: {
         email,
         username,
@@ -58,9 +55,22 @@ export async function POST(req: Request) {
       },
     });
 
+    await signIn("credentials", {
+      emailOrUsername: email,
+      password,
+      redirect: false,
+    });
+
     return NextResponse.json(
       {
-        user: userToResponse,
+        user: {
+          id: newUser.id,
+          email: newUser.email,
+          username: newUser.username,
+          createdAt: newUser.createdAt,
+          avatar: newUser.avatar,
+          draws: [],
+        },
         message: "User created successfully",
       },
       { status: 201 },

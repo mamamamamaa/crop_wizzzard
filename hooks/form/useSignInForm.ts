@@ -32,7 +32,7 @@ export const useSignInForm = () => {
         redirect: false,
       });
 
-      router.replace("/");
+      router.replace("/?profile=true");
     } catch (error) {
       if (error instanceof Error) {
         form.setError("emailOrUsername", { message: error.message });

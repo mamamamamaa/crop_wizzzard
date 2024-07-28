@@ -1,19 +1,11 @@
 import { FC } from "react";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  Button as ModalButton,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  useDisclosure,
-} from "@nextui-org/react";
-import { useRouter } from "next/navigation";
 
 import { Tool } from "@/types";
 import { toolBarOptions } from "@/constants";
+import { useProfileModal } from "@/hooks";
+import { ProfileModal } from "@/components";
 
 import { Button } from "./Button";
 
@@ -23,8 +15,7 @@ interface ToolBarProps {
 }
 
 export const ToolBar: FC<ToolBarProps> = ({ activeTool, onChange }) => {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const router = useRouter();
+  const { isOpen, onOpen, onOpenChange } = useProfileModal();
 
   return (
     <>
@@ -52,45 +43,7 @@ export const ToolBar: FC<ToolBarProps> = ({ activeTool, onChange }) => {
         </div>
       </div>
 
-      <Modal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        className="bg-gray-700"
-        closeButton={<></>}
-        backdrop="blur"
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1 text-center">
-                This could be your profile and your saves 😋
-              </ModalHeader>
-              <ModalBody className="text-center">
-                <p>
-                  Access your profile to view and manage your saved items,
-                  preferences, and settings. Keep track of your favorite tools
-                  and easily access them anytime.
-                </p>
-                <p>To access this feature, please register or log in.</p>
-              </ModalBody>
-              <ModalFooter className="justify-center">
-                <ModalButton
-                  color="primary"
-                  onPress={() => {
-                    onClose();
-                    router.push("/auth/sign-in");
-                  }}
-                >
-                  Register
-                </ModalButton>
-                <ModalButton color="default" onPress={onClose}>
-                  Next Time 😭
-                </ModalButton>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+      <ProfileModal isOpen={isOpen} onOpenChange={onOpenChange} />
     </>
   );
 };
