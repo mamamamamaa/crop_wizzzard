@@ -2,12 +2,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { KonvaEventObject } from "konva/lib/Node";
 import { Layer, Rect, Stage } from "react-konva";
+import { SessionProvider } from "next-auth/react";
 
 import { useDragging, useMouseArea, useTool } from "@/hooks";
 import { Shape, Tool } from "@/types";
 import { isShapeInSelection, SelectionBox } from "@/helpers";
 import { ShapeOptions, Shapes, ToolBar } from "@/components";
-import { SessionProvider } from "@/providers";
+import { useShapeContext } from "@/providers";
 
 export interface ShapeStyle {
   fill: string;
@@ -20,7 +21,7 @@ export interface ShapeStyle {
 
 export default function Draw() {
   const { tool, setTool } = useTool();
-  const [shapes, setShapes] = useState<Shape[]>([]);
+  const { shapes, setShapes } = useShapeContext();
   const [defaultStyle, setDefaultStyle] = useState<ShapeStyle>({
     fill: "transparent",
     stroke: "white",

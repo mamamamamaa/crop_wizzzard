@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { NextUIProvider } from "@nextui-org/system";
 
+import { ShapeProvider } from "@/providers";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -18,7 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <NextUIProvider>{children}</NextUIProvider>
+        <ShapeProvider>
+          <NextUIProvider>{children}</NextUIProvider>
+        </ShapeProvider>
       </body>
     </html>
   );

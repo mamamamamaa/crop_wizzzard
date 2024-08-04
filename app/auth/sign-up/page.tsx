@@ -4,14 +4,26 @@ import Link from "next/link";
 import { FormProvider } from "react-hook-form";
 import { Divider } from "@nextui-org/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { faGithub, faGoogle } from "@fortawesome/free-brands-svg-icons";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 import logo from "@/public/logo.jpg";
 import { TextField } from "@/components";
-import { useSignUpForm } from "@/hooks";
+import { useOAuthForms, useSignUpForm } from "@/hooks";
 
 export default function Page() {
+  const router = useRouter();
+  const { data } = useSession();
   const { form, handleSubmit } = useSignUpForm();
+  const { handleGitHubAuth, handleGoogleAuth } = useOAuthForms();
+
+  useEffect(() => {
+    if (data?.user) {
+      router.replace("/?profile=true");
+    }
+  }, [data]);
 
   return (
     <FormProvider {...form}>
@@ -35,7 +47,7 @@ export default function Page() {
         </div>
         <div className="flex w-[50vw] items-center justify-center p-10 shadow-lg">
           <div className="min-w-[400px] flex flex-col gap-6">
-            <h1 className="text-5xl font-bold text-center mb-8">Sing Up</h1>
+            <h1 className="text-5xl font-bold text-center mb-8">Sign Up</h1>
             <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
               <TextField name="username" label="Username" isRequired />
               <TextField name="email" type="email" label="Email" isRequired />
@@ -57,9 +69,13 @@ export default function Page() {
 
               <Divider className="bg-white" />
 
-              <Button type="button">
+              <Button type="button" onClick={handleGitHubAuth}>
                 <FontAwesomeIcon icon={faGithub} size="lg" />
                 Sign In with GitHub
+              </Button>
+              <Button type="button" onClick={handleGoogleAuth}>
+                <FontAwesomeIcon icon={faGoogle} size="lg" />
+                Sign In with Google
               </Button>
             </form>
             <p className="text-center text-sm mt-4">

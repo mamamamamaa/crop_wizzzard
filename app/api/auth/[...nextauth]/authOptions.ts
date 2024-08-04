@@ -1,4 +1,5 @@
 import GitHubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import bcrypt from "bcrypt";
@@ -19,6 +20,12 @@ export const authOptions: NextAuthOptions = {
     GitHubProvider({
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+      allowDangerousEmailAccountLinking: true,
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      allowDangerousEmailAccountLinking: true,
     }),
     CredentialsProvider({
       name: "Credentials",
@@ -75,8 +82,32 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user }) {
-      return !!user.username;
+    async signIn({ user, account }) {
+      console.log("user");
+      if (user && account?.type === "oauth" && user.email) {
+        try {
+          await prisma.user.upsert({
+            where: { email: user.email },
+            update: {
+              username: user.name || undefined,
+              avatar: user.image || undefined,
+            },
+            create: {
+              email: user.email,
+              username: user.name || `user${user.id}`,
+              avatar: user.image || undefined,
+              password: await bcrypt.hash(user.email, 10),
+            },
+          });
+
+          return true;
+        } catch (error) {
+          console.log(error);
+          return false;
+        }
+      }
+
+      return !!user.username || !!account;
     },
     async jwt({ token, user }) {
       return {
@@ -86,7 +117,7 @@ export const authOptions: NextAuthOptions = {
         email: user?.email || token?.email,
         avatar: user?.avatar || token?.avatar,
         createdAt: user?.createdAt || token?.createdAt,
-        draws: user?.draws || token?.draws,
+        draws: user?.draws || token?.draws || [],
       };
     },
     async session({ session, token }) {
@@ -99,7 +130,7 @@ export const authOptions: NextAuthOptions = {
           email: token.email,
           avatar: token.avatar,
           createdAt: token.createdAt,
-          draws: token.draws,
+          draws: token.draws || [],
         },
       };
     },

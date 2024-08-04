@@ -1,1 +1,1 @@
-export * from "./SessionProvider";
+export * from "./ShapeProvider";

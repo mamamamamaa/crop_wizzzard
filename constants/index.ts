@@ -34,3 +34,8 @@ export const toolBarOptions = [
     icon: faPencil,
   },
 ];
+
+export const STORAGE_KEY = {
+  SHAPES: "SHAPES",
+  TOOL: "TOOL",
+};

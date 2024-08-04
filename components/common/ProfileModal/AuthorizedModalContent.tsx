@@ -14,18 +14,25 @@ export const AuthorizedModalContent = ({ session }: Props) => {
     <ModalContent>
       {(onClose) => (
         <>
-          <ModalBody className="text-start">
-            <User
-              name={username}
-              description={email}
-              avatarProps={{
-                src: avatar,
-              }}
-            />
+          <ModalBody>
+            <div className="flex flex-row justify-between items-center">
+              <User
+                name={username}
+                description={email}
+                avatarProps={{
+                  src: avatar,
+                }}
+              />
+              <ModalButton onClick={() => signOut()}>Sign Out</ModalButton>
+            </div>
+
+            <div>
+              <p>Saves: {session.user.draws?.length}</p>
+
+              <ul>{}</ul>
+            </div>
           </ModalBody>
-          <ModalFooter className="justify-center">
-            <ModalButton onClick={() => signOut()}>Sign Out</ModalButton>
-          </ModalFooter>
+          <ModalFooter className="justify-center"></ModalFooter>
         </>
       )}
     </ModalContent>

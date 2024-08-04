@@ -1,6 +1,8 @@
 import { Modal } from "@nextui-org/react";
 
-import { useSession } from "@/providers";
+// import { useSession } from "@/providers";
+
+import { useSession } from "next-auth/react";
 
 import { UnauthorizedModalContent } from "./UnauthorizedModalContent";
 import { AuthorizedModalContent } from "./AuthorizedModalContent";
@@ -11,7 +13,7 @@ type Props = {
 };
 
 export const ProfileModal = ({ isOpen, onOpenChange }: Props) => {
-  const session = useSession();
+  const { data } = useSession();
 
   return (
     <Modal
@@ -21,10 +23,10 @@ export const ProfileModal = ({ isOpen, onOpenChange }: Props) => {
       closeButton={<></>}
       backdrop="blur"
     >
-      {!session ? (
-        <UnauthorizedModalContent />
+      {data && data?.user ? (
+        <AuthorizedModalContent session={data} />
       ) : (
-        <AuthorizedModalContent session={session} />
+        <UnauthorizedModalContent />
       )}
     </Modal>
   );
