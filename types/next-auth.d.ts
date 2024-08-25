@@ -7,14 +7,6 @@ declare module "next-auth" {
     email: string;
     avatar: string;
     createdAt: string;
-    draws: Draw[];
-  }
-
-  interface Draw {
-    id: string;
-    title: string;
-    draw: JSON;
-    createdAt: string;
   }
 
   interface Session {
@@ -24,7 +16,6 @@ declare module "next-auth" {
       email: string;
       avatar: string;
       createdAt: string;
-      draws: Draw[];
     };
     token: {
       id: string;
@@ -32,7 +23,6 @@ declare module "next-auth" {
       email: string;
       avatar: string;
       createdAt: string;
-      draws: Draw[];
     };
   }
 }

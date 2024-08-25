@@ -17,6 +17,7 @@ export const ProfileModal = ({ isOpen, onOpenChange }: Props) => {
 
   return (
     <Modal
+      size={"3xl"}
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       className="bg-gray-700"

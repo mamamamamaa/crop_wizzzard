@@ -9,8 +9,9 @@ import {
   SelectionBox,
   shapeSizing,
 } from "@/helpers";
-import { ShapeStyle } from "@/app/draw/page";
 import { Shape, ShapeType, Tool } from "@/types";
+
+import { ShapeStyle } from "@/app/shapes/page";
 
 const initialMouseArea = {
   visible: false,

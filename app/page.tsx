@@ -21,7 +21,7 @@ export interface ShapeStyle {
 
 export default function Draw() {
   const { tool, setTool } = useTool();
-  const { shapes, setShapes } = useShapeContext();
+  const { shapes, setShapes, stageRef } = useShapeContext();
   const [defaultStyle, setDefaultStyle] = useState<ShapeStyle>({
     fill: "transparent",
     stroke: "white",
@@ -113,6 +113,7 @@ export default function Draw() {
           className="bg-gray-900"
           width={window.innerWidth}
           height={window.innerHeight}
+          ref={stageRef}
         >
           <Layer>
             <Shapes tool={tool} shapes={shapes} onDragEnd={handleDragShape} />

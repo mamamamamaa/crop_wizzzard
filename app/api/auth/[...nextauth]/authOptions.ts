@@ -39,6 +39,7 @@ export const authOptions: NextAuthOptions = {
           type: "password",
         },
       },
+      // @ts-ignore
       async authorize(credentials) {
         if (!credentials?.emailOrUsername || !credentials?.password) {
           return null;
@@ -66,24 +67,18 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const draws = await prisma.draw.findMany({
-          where: { authorId: existingUser.id },
-        });
-
         return {
           id: existingUser.id,
           email: existingUser.email,
           username: existingUser.username,
           createdAt: existingUser.createdAt,
           avatar: existingUser.avatar,
-          draws,
         };
       },
     }),
   ],
   callbacks: {
     async signIn({ user, account }) {
-      console.log("user");
       if (user && account?.type === "oauth" && user.email) {
         try {
           await prisma.user.upsert({
@@ -117,7 +112,6 @@ export const authOptions: NextAuthOptions = {
         email: user?.email || token?.email,
         avatar: user?.avatar || token?.avatar,
         createdAt: user?.createdAt || token?.createdAt,
-        draws: user?.draws || token?.draws || [],
       };
     },
     async session({ session, token }) {
@@ -130,7 +124,6 @@ export const authOptions: NextAuthOptions = {
           email: token.email,
           avatar: token.avatar,
           createdAt: token.createdAt,
-          draws: token.draws || [],
         },
       };
     },

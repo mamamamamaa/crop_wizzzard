@@ -4,9 +4,10 @@ import { faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 import { Slider } from "@nextui-org/react";
 
 import { Shape, ShapeType, Text } from "@/types";
-import { ShapeStyle } from "@/app/draw/page";
 
 import { Button } from "./Button";
+
+import { ShapeStyle } from "@/app/shapes/page";
 
 interface ShapeOptionsProps {
   style: ShapeStyle;

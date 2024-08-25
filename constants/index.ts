@@ -38,4 +38,5 @@ export const toolBarOptions = [
 export const STORAGE_KEY = {
   SHAPES: "SHAPES",
   TOOL: "TOOL",
+  ACTIVE_SHAPE: "ACTIVE_SHAPE",
 };
